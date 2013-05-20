@@ -1,4 +1,4 @@
-pyPlanets
-=========
+bodiesReferenceEngine
+=====================
 
-Python based bodies reference engine
+A MetaSim Bodies Reference Engine
