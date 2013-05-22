@@ -1,17 +1,18 @@
 # Python dependencies, Bottle, pyMongo, virtualenv
 import json
 import bottle
-import vitualenv
+import virtualenv
+import os
 from bottle import route, run, request, abort
 from pymongo import Connection
 
 # URI Variables
-mongoUri = process.env.MONGOLAB_URI || 'mongodb://localhost/bodiesReferenceEngine'
+mongoUri = os.getenv('MONGOLAB_URI', 'mongodb://localhost/pyPlanets')
 portno = 5016
 
 # mongo database info
-connection = Connection('localhost', 27017)
-db = connection.mydatabase
+#connection = Connection('localhost', 27017)
+#db = connection.mydatabase
 
 # example functions from before
 
@@ -46,21 +47,31 @@ def getLinkByRel(links, rel):
 
 # Endpoint Resource
 
+@route('/metasim', method='GET')
+def getEndpoint():
+    return json.dumps({
+       'versions': [{
+            'id': '1.0',
+               'links': [{
+                'rel': '/rel/entrypoint',
+                'href': '/metasim/1.0',
+                'method': 'GET'}]}]});
+
 @route('/metasim/:version', method='GET')
-def getVersion(request, response):
-    if request.params.version == '1.0':
-        response.send:
-            links:
-                rel: '/rel/simulations'
-                href: '/metasim/' + request.params.version+ '/simulations'
-                method: 'POST'
+def getVersion(version):
+    if version == '1.0':
+        return json.dumps({
+            'links': {
+                'rel': '/rel/simulations',
+                'href': '/metasim/' + request.params.version+ '/simulations',
+                'method': 'POST'}})
     else: abort(404, 'Version not found')
 
 
 
 
 
-@route('/metasim/:version/simulations', method='GET')
+#@route('/metasim/:version/simulations', method='GET')
 
 
 
