@@ -68,7 +68,29 @@ def getVersion(version):
     else: abort(404, 'Version not found')
 
 
+# Simulations Resource
 
+@route('/metasim/:version/simulations', method='GET')
+def getSimVer():
+    return json.dumps({
+       'versions': [{
+            'id': '1.0',
+               'links': [{
+                'rel': '/rel/entrypoint',
+                'href': '/metasim/1.0',
+                'method': 'GET'}]}]});
+
+@route('/metasim/:version/simulations', method='GET')
+def getSimulations(version):
+    if version == '1.0':
+        # Mongo calls need work
+        db['simulations'].find_one({}).toArray(function(err, simulations)
+        return json.dumps({
+            'links': {
+                'rel': '/rel/simulations',
+                'href': '/metasim/' + request.params.version+ '/simulations',
+                'method': 'POST'}})
+    else: abort(404, 'Version not found')
 
 
 #@route('/metasim/:version/simulations', method='GET')
