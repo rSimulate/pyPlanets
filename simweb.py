@@ -3,6 +3,8 @@ import json
 import bottle
 import virtualenv
 import os
+import logging
+
 from bottle import route, run, request, abort
 from pymongo import Connection
 
@@ -72,6 +74,7 @@ def getVersion(version):
 
 @route('/metasim/:version/simulations', method='GET')
 def getSimVer():
+#     logging.info(json.dumps() ##I need help turning on logging##
     return json.dumps({
        'versions': [{
             'id': '1.0',
@@ -92,10 +95,55 @@ def getSimulations(version):
                 'method': 'POST'}})
     else: abort(404, 'Version not found')
 
+# Create a new Simulation
+@route('/metasim/:version/simulations', method='post')
+def makeSimulation(version)):
+    simulationUri = request.body.simulation_href
+    # Console log here
+    simulationID = simulationUri.split('/').slice(-1)
+    # Create simulation object
+    simulation =:
+        simulation_href= request.body.simulation_href
+    db.collection('simulations').insert(simulation)
+    response.header('Location', url.format:
+        protocol: 'http',
+        hostname: request.host,
+        port: port,
+        pathname: request.originalUrl + '/' + simulationID + '/data'
+    )
+    response.send(201, bodies:
+        radius: 1
+        xyz_position: {x:5, y:0, z:0}
+        xyz_velocity: {x:0, y:0, z:0}
+    )
 
-#@route('/metasim/:version/simulations', method='GET')
 
+# Delete Simulations
+@route('/metasim/:version/simulations', method='delete')
+def deleteSimulation(version):
+    version = request.params.version
+    if version == '1.0':
+        simulationID = request.params.id
+        if db.collection('simulations').find_one(_id:simuilationID).count() > 0 :
+            db.collection('simulations').remove(_id:simulationId)
+            response.send(204, null)
+        else:
+            # Console dump
+            response.send(404, 'version' + version + ' not found')
 
+# Serve up Simulation data
+@route('/metasim/:version/simulations/:id/data'):
+def servSim():
+    response.send({bodies:[{
+        radius:1
+        xyz_position: {x:5, y:0, z:0},
+        xyz_velocity: {x:0, y:0, z:0}}]
+        }
+        )
 
+# Port listener
+app.listen(port, function() {
+    # console.log
+    }
 
 run(host='localhost', port=portno)
